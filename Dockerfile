@@ -25,5 +25,6 @@ RUN mkdir /var/www/html/livechat
 COPY --chown=www-data ./lhc_web /var/www/html/livechat
 WORKDIR /var/www/html/livechat
 COPY --chown=www-data ./healthcheck.html /var/www/html/healthcheck.html
-RUN ln -s /dev/stdout /var/www/html/livechat/cache/default.log
+RUN rm /var/www/html/livechat/cache/default.log && \
+     ln /var/log/apache2/error.log /var/www/html/livechat/cache/default.log
 EXPOSE 80
