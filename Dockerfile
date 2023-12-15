@@ -20,10 +20,10 @@ RUN sed -i 's/#ServerName www.example.com/RemoteIPHeader X-Forwarded-For/g' /etc
     && echo "session.save_handler=redis" >> /usr/local/etc/php/php.ini \
     && echo "session.save_path=\${SESSION_SAVE_PATH}" >> /usr/local/etc/php/php.ini
 
-
 # Copy the lhc_web folder to /var/www/html
 RUN mkdir /var/www/html/livechat
 COPY --chown=www-data ./lhc_web /var/www/html/livechat
 WORKDIR /var/www/html/livechat
 COPY --chown=www-data ./healthcheck.html /var/www/html/healthcheck.html
+RUN ln -s /dev/stdout /var/www/html/livechat/cache/default.log
 EXPOSE 80
