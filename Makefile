@@ -9,6 +9,7 @@ VALUES := $(VALUES) --set image.tag=${TAG}
 
 build:
 	docker-compose build
+	docker tag forestsoft/livehelperchat:latest forestsoft/livehelperchat:${TAG}
 	docker push forestsoft/livehelperchat:${TAG}
 
 template:

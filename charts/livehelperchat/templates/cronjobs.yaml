@@ -18,8 +18,6 @@ spec:
             imagePullSecrets:
               {{- toYaml . | nindent 15 }}
             {{- end }}
-            initContainers:
-              {{- include "livehelperchat.wait-for-db-initcontainer" $ | nindent 15}}
             containers:
               - command: [ {{ $job.command | quote }} ]
                 {{- with $job.args }}
@@ -36,22 +34,22 @@ spec:
                 {{- toYaml $job.resources | nindent 18 }}
                 env:
                   - name: DATABASE_HOST
-                    value: {{ .Values.db.host }}
+                    value: {{$.Values.db.host }}
                   - name: DATABASE_PORT
-                    value: {{ .Values.db.port | quote }}
+                    value: {{$.Values.db.port | quote }}
                   - name: DATABASE_NAME
-                    value: {{ .Values.db.name }}
+                    value: {{$.Values.db.name }}
                   - name: DATABASE_USER
-                    value: {{ .Values.db.user }}
+                    value: {{$.Values.db.user }}
                   - name: DATABASE_PASSWORD
                     valueFrom:
                       secretKeyRef:
-                        name: {{ .Values.db.secretName }}
+                        name: {{$.Values.db.secretName }}
                         key: PASSWORD
                   - name: ES_HOST
-                    value: {{ .Values.elasticsearch.host }}
+                    value: {{$.Values.elasticsearch.host }}
                   - name: REDIS_HOST
-                    value: {{ .Values.redis.host }}
+                    value: {{$.Values.redis.host }}
                   - name: SECRET_HASH
                     valueFrom:
                       secretKeyRef:
@@ -60,44 +58,20 @@ spec:
                   - name: SESSION_SAVE_PATH
                     valueFrom:
                       secretKeyRef:
-                        name: {{ .Values.redis.secretName }}
+                        name: {{$.Values.redis.secretName }}
                         key: session.save_path
 
                   - name: REDIS_PASSWORD
                     valueFrom:
                       secretKeyRef:
-                        name: {{ .Values.redis.secretName }}
+                        name: {{$.Values.redis.secretName }}
                         key: password
-
-
-                {{- if or $.Values.storage.enabled $.Values.service.publicKeys }}
-                volumeMounts:
-                {{- if $.Values.storage.enabled }}
-                {{- range $.Values.storage.mounts }}
-                {{- if .existingClaim }}
-                - name: {{ .existingClaim | trunc 63 }}
-                  {{- else }}
-                - name: {{ .name }}
-                  {{- end }}
-                  mountPath: {{.mountPath}}
-                {{- end }}
-                {{- end }}
-              {{- end }}
+                
             dnsPolicy: ClusterFirst
             restartPolicy: {{ default "OnFailure" $job.restartPolicy }}
             schedulerName: default-scheduler
             terminationGracePeriodSeconds: 30
-            volumes:
-              {{- if $.Values.storage.enabled }}
-              {{- range $.Values.storage.mounts }}
-              {{- if .existingClaim }}
-              - name: {{ .existingClaim | trunc 63 }}
-                persistentVolumeClaim:
-                  claimName: {{ .existingClaim }}
-                    {{- end }}
-                    {{- end }}
-              {{- end }}
-
+            
   schedule: {{ $job.schedule | quote }}
   suspend: {{ default false $job.suspend }}
 ---
