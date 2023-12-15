@@ -13,7 +13,7 @@ class erLhcoreClassLhRedis
 			if (isset($params['auth']) && $params['auth'] !== NULL) {
                 $this->redis->auth($params['auth']);
             }
-	        $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+	        $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_JSON);
 			
             //select database by index
             if (isset($params['database'])) {
@@ -30,16 +30,19 @@ class erLhcoreClassLhRedis
      * */
     public function set($key, $value, $compress, $ttl = 0)
     {
+        $serialized = @serialize($value);
         if ($ttl == 0) {
-            $this->redis->setex($key,2678400,$value); // One month
+            $this->redis->setex($key,2678400,$serialized); // One month
         } else {
-            $this->redis->setex($key,$ttl,$value);
+            $this->redis->setex($key,$ttl,$serialized);
         }
+        unset($serialized);
     }
     
     public function get($var)
     {
-        return $this->redis->get($var);
+        $value = $this->redis->get($var);
+        return @unserialize($value);
     }
     
     /**

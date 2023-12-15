@@ -106,18 +106,18 @@ return array (
                 ),
             'redis' => array (
                 'server' => array (
-                    'host' => 'localhost',
-                    'port' => 6379,
-                    'auth' => null,
-                    'database' => 0
+                    'host' => getenv('REDIS_HOST'),
+                    'port' => getenv("REDIS_PORT") ?? 6379,
+                    'auth' => getenv("REDIS_PASSWORD") ?? null,
+                    'database' => getenv("REDIS_DATABASE") ?? 6,
                 )
             ),
             'db' =>
                 array (
-                    'host' => '',
-                    'user' => '',
-                    'password' => '',
-                    'database' => '',
+                    'host' => getenv('DATABASE_HOST'),
+                    'user' => getenv('DATABASE_USER'),
+                    'password' => getenv('DATABASE_PASSWORD'),
+                    'database' => getenv('DATABASE_NAME'),
                     'port' => 3306,
                     'use_slaves' => false,
                     'db_slaves' =>

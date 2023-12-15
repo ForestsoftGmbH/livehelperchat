@@ -375,6 +375,7 @@ class erLhcoreClassModule{
             $instance = erLhcoreClassSystem::instance();
             $cacheKey = md5(self::$currentModuleName.'_'.self::$currentView.'_'.$instance->WWWDirLang.'_'.$instance->Language);
 
+            $cacheModules = self::$cacheInstance->restore('moduleCache_'.self::$currentModuleName.'_version_'.self::$cacheVersionSite);
             if ( ($cacheModules = self::$cacheInstance->restore('moduleCache_'.self::$currentModuleName.'_version_'.self::$cacheVersionSite)) !== false && key_exists($cacheKey,$cacheModules))
             {
             	return $cacheModules[$cacheKey];
