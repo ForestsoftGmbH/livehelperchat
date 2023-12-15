@@ -4,8 +4,9 @@ NAMESPACE ?= expansionjoint-prd
 VALUES := -f ./charts/livehelperchat/values.yaml
 VALUES := $(VALUES) $(CREDENTIALS)
 SHOW ?= templates/deployment.yaml
+include charts/secrets/credentials.sh
 TAG ?= $(shell git rev-parse --short HEAD)
-VALUES := $(VALUES) --set image.tag=${TAG}
+VALUES := $(VALUES) --set image.tag=${TAG} $(CREDENTIALS)
 
 build:
 	docker-compose build

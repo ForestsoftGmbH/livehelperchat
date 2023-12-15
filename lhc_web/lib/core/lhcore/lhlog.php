@@ -81,7 +81,7 @@ class erLhcoreClassLog implements ezcBaseConfigurationInitializer {
 		$defaultGroup = $cfg->getSetting( 'site', 'default_group', false );
 		$defaultUser = $cfg->getSetting( 'site', 'default_user', false );
 
-		$writeAll = new ezcLogUnixFileWriter ( "cache", "default.log",204800, 5, $defaultUser, $defaultGroup);
+		$writeAll = new ezcLogUnixFileWriter ( "php:/", "output",204800, 5, $defaultUser, $defaultGroup);
 
 		$log->getMapper ()->appendRule ( new ezcLogFilterRule ( $filter, $writeAll, true ) );
 

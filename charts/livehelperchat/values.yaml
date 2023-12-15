@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: forestsoft/livehelperchat
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
@@ -26,6 +26,7 @@ serviceAccount:
 cronjobs:
   - name: existing-messages
     schedule: "*/5 * * * *"
+    suspend: true
     command: 
       - /usr/local/bin/php 
       - cron.php 
