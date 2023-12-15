@@ -24,18 +24,32 @@ serviceAccount:
   name: ""
 
 cronjobs:
-  - name: existing-messages
+  - name: livechat-existing-chats
     schedule: "*/5 * * * *"
     suspend: true
     command: 
       - /usr/local/bin/php 
       - cron.php 
       - -s 
-      - site_admin 
+      - site_admin
+      - -e
+      - elasticsearch
       - -c
       - cron/index_chats
-    args: []
     resources: {}
+  - name: livechat-existing-messages
+    schedule: "*/5 * * * *"
+    suspend: true
+    command:
+      - /usr/local/bin/php
+      - cron.php
+      - -s
+      - site_admin
+      - -e
+      - elasticsearch
+      - -c
+      - cron/index_msg
+    resources: { }
 
 podAnnotations: {}
 
